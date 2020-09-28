@@ -51,6 +51,7 @@ namespace rock_paper_scissors
             _first = FindAliveCompetitorIndex(_first + 1);
             _second = FindAliveCompetitorIndex(_first + 1);
             
+            //TODO delete log
             _competitors[_first].HitResult(_competitors[_second]);
             Console.WriteLine($"{_competitors[_first]} hits {_competitors[_second]}. \n" +
                               $"Is alive {_competitors[_first]}: {_competitors[_first].IsAlive} \n" +

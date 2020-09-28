@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using rock_paper_scissors.Interfaces;
 using rock_paper_scissors.Domains;
@@ -15,7 +16,13 @@ namespace rock_paper_scissors
         
         public Game(int amount)
         {
+            if (amount <= 0)
+            {
+                throw new InvalidEnumArgumentException("The number of competitors must be a positive number");
+            }
+            
             _competitors = new List<Сompetitor>(amount);
+            
             var rand = new Random();
             for (var i = 0; i < amount; i++)
             {
@@ -37,53 +44,33 @@ namespace rock_paper_scissors
 
         public bool Next()
         {
-            if (_competitors.Count == 1 || _competitors.Count <= 0)
-            {
-                return false;
-            }
-            
-            var sum = _competitors.Count(c => c != null);
+            var aliveCompetitors = _competitors.Count(c => c.IsAlive);
             foreach (var type in Types)
             {
-                if (_competitors.Count(c => c != null && c.GetType() == type) == sum)
+                if (_competitors.Count(c => c.IsAlive && c.GetType() == type) == aliveCompetitors)
                 {
                     return false;
                 }
             }
 
-            _first = FindAliveComponent(_first + 1);
-            _second = FindAliveComponent(_first + 1);
+            _first = FindAliveCompetitorIndex(_first + 1);
+            _second = FindAliveCompetitorIndex(_first + 1);
             
             var result = _competitors[_first].HitResult(_competitors[_second]);
             Console.WriteLine($"{_competitors[_first]} hits {_competitors[_second]}. \n" +
                               $"Is alive {_competitors[_first]}: {_competitors[_first].IsAlive} \n" +
                               $"Is alive {_competitors[_second]}: {_competitors[_second].IsAlive} \n");
-
-            if (_competitors[_first].ToString() == _competitors[_second].ToString())
-            {
-                return true;
-            }
-            
-            if (result)
-            {
-                _competitors[_second] = null;
-            }
-            else
-            {
-                _competitors[_first] = null;
-            }
-            
             return true;
         }
 
-        public IEnumerable<string> Result() => _competitors.Select(c => c == null ? "DEAD" : c.ToString()).ToList();
+        public IEnumerable<string> Result() => _competitors.Select(c => !c.IsAlive ? "DEAD" : c.ToString()).ToList();
 
-        private int FindAliveComponent(int index)
+        private int FindAliveCompetitorIndex(int index)
         {
             if (index > _competitors.Count - 1)
                 index = 0;
             
-            while (_competitors[index] == null)
+            while (!_competitors[index].IsAlive)
             {
                 index++;
                 if (index > _competitors.Count - 1)

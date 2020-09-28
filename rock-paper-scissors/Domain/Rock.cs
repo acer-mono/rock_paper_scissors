@@ -1,6 +1,4 @@
-using rock_paper_scissors.Interfaces;
-
-namespace rock_paper_scissors.Domains
+namespace rock_paper_scissors.Domain
 {
     public class Rock : Сompetitor
     {

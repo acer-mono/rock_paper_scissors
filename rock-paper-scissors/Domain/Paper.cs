@@ -1,29 +1,26 @@
-using rock_paper_scissors.Interfaces;
-
-namespace rock_paper_scissors.Domains
+namespace rock_paper_scissors.Domain
 {
-    public class Scissors : Сompetitor
+    public class Paper : Сompetitor
     {
-
         public override bool HitResult(Сompetitor competitor)
         {
             switch (competitor)
             {
                 case Paper paper:
-                    paper.IsAlive = false;
-                    return true;
-                case Scissors scissors:
                     return false;
-                case Rock rock:
+                case Scissors scissors:
                     IsAlive = false;
                     return false;
+                case Rock rock:
+                    rock.IsAlive = false;
+                    return true;
             };
             return false;
         }
-        
+
         public override string ToString()
         {
-            return "Scissors";
+            return "Paper";
         }
     }
 }

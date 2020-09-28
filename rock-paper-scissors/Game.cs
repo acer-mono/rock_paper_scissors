@@ -2,8 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using rock_paper_scissors.Interfaces;
-using rock_paper_scissors.Domains;
+using rock_paper_scissors.Domain;
 
 namespace rock_paper_scissors
 {
@@ -27,18 +26,14 @@ namespace rock_paper_scissors
             for (var i = 0; i < amount; i++)
             {
                 var random = rand.Next() % 3;
-                switch (random)
+                Сompetitor competitor = random switch
                 {
-                    case 0:
-                        _competitors.Add(new Paper());
-                        break;
-                    case 1:
-                        _competitors.Add(new Rock());
-                        break;
-                    case 2:
-                        _competitors.Add(new Scissors());
-                        break;
-                }
+                    0 => new Paper(),
+                    1 => new Rock(),
+                    2 => new Scissors(),
+                    _ => throw new InvalidOperationException("Unable to create competitor from the given index")
+                };
+                _competitors.Add(competitor);
             }
         }
 
@@ -56,7 +51,7 @@ namespace rock_paper_scissors
             _first = FindAliveCompetitorIndex(_first + 1);
             _second = FindAliveCompetitorIndex(_first + 1);
             
-            var result = _competitors[_first].HitResult(_competitors[_second]);
+            _competitors[_first].HitResult(_competitors[_second]);
             Console.WriteLine($"{_competitors[_first]} hits {_competitors[_second]}. \n" +
                               $"Is alive {_competitors[_first]}: {_competitors[_first].IsAlive} \n" +
                               $"Is alive {_competitors[_second]}: {_competitors[_second].IsAlive} \n");
